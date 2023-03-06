@@ -1,0 +1,15 @@
+{
+    "name": "geekbrains/php-advanced",
+    "autoload": {
+        "psr-4": {
+            "Geekbrains\\PhpAdvanced\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nelly Rozova",
+            "email": "igorevna.nailya@mail.ru"
+        }
+    ],
+    "require": {}
+}

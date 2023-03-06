@@ -14,6 +14,40 @@ class User
      * @param Name $username
      * @param string $login
      */
+
+    //геттеры и сеттеры
+    public function id(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+
+    public function getUsername(): Name
+    {
+        return $this->username;
+    }
+
+    public function setUsername(Name $username): void
+    {
+        $this->username = $username;
+    }
+
+    public function getLogin(): string
+    {
+        return $this->login;
+    }
+
+    public function setLogin(string $login): void
+    {
+        $this->login = $login;
+    }
+
+    //конструктор
     public function __construct(int $id, Name $username, string $login)
     {
         $this->id = $id;

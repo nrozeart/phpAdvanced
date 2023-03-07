@@ -25,6 +25,6 @@ class InMemoryUsersRepository
                 return $user;
             }
         }
-        throw new UserNotFoundException("User not found: $id");
+        throw new UserNotFoundException("User not found: $id" . PHP_EOL);
     }
 }

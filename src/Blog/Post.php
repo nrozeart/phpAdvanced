@@ -6,23 +6,27 @@ use Geekbrains\PhpAdvanced\Person\Person;
 
 class Post
 {
-    private int $id;
+    private int $postId;
     private Person $author;
+    private string $title;
     private string $text;
 
     /**
      * @param Person $author
      * @param string $text
+     * @param string $title
+     * @param int $postId
      */
-    public function __construct(int $id, Person $author, string $text)
+    public function __construct(int $postId, Person $author, string $title, string $text)
     {
-        $this->id = $id;
+        $this->postId = $postId;
         $this->text = $text;
+        $this->title = $title;
         $this->author = $author;
     }
 
     public function __toString()
     {
-        return $this->author . ' пишет: ' . $this->text . PHP_EOL;
+        return $this->author . ' опубликовал статью с названием: "' . $this->title . '" и содержанием: "'. $this->text . '"' .PHP_EOL;
     }
 }

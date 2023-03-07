@@ -1,5 +1,5 @@
 <?php
-namespace Geekbrains\PhpAdvanced\Blog;
+namespace Geekbrains\PhpAdvanced\Blog\Repositories;
 
 use Geekbrains\PhpAdvanced\Person\Name;
 
@@ -56,7 +56,7 @@ class User
     }
     public function __toString(): string
     {
-        return "Юзер $this->id с именем $this->username и логином $this->login." . PHP_EOL;
+        return "Юзер $this->id с именем $this->username и логином $this->login";
     }
 
 }

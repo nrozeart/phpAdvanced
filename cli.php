@@ -1,12 +1,9 @@
 <?php
 
-use Geekbrains\PhpAdvanced\Blog\Post;
-use Geekbrains\PhpAdvanced\Blog\Repositories\Comments;
-use Geekbrains\PhpAdvanced\Blog\User;
-use Geekbrains\PhpAdvanced\Person\Person;
+use Geekbrains\PhpAdvanced\Blog\Repositories\Post;
+use Geekbrains\PhpAdvanced\Blog\Repositories\Comment;
+use Geekbrains\PhpAdvanced\Blog\Repositories\User;
 use Geekbrains\PhpAdvanced\Person\Name;
-use Geekbrains\PhpAdvanced\Blog\Repositories\InMemoryUsersRepository;
-use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
 
 //сокр. для use src\Blog\User as User;
 // сокр. для use Person\Name as Name; и use Person\Person as Person;
@@ -26,37 +23,47 @@ include __DIR__ . "/vendor/autoload.php";
 
 $faker = Faker\Factory::create('ru_RU');
 
-$name = new Name($faker->firstName(), $faker->lastName());
-$user = new User(1, $name, "Admin");
-$person = new Person($name, new DateTimeImmutable());
-$comment = new Comments(
-    1,
-    $person,
-    1,
-    $faker->realText(rand(10,15))
+$name = new Name(
+    $faker->firstName(),
+    $faker->lastName()
 );
+$user = new User(
+    $faker->randomDigitNotNull(),
+    $name,
+    $faker->word(1));
 
-$post = new Post(
-    1,
-    $person,
-    $faker->realText(rand(10,15)),
-    $faker->realText(rand(100,150))
-);
+$route = $argv[1] ?? null;
 
-$userRepository = new InMemoryUsersRepository();
-$userRepository->save($user);
-
-
-try {
-    echo $userRepository->get(1);
-//    echo $userRepository->get(2);
-//    echo $userRepository->get(3);
-} catch (UserNotFoundException $e) {
-    echo $e->getMessage();
-} catch (Exception $e) {
-    echo "Ой, что-то не так!\n";
-    echo $e->getMessage();
+switch($argv[1]) {
+    case "user":
+        echo $user;
+        break;
+    case "post":
+        $post = new Post(
+            $faker->randomDigitNotNull(),
+            $user,
+            $faker->realText(rand(10,15)),
+            $faker->realText(rand(50,100))
+        );
+        echo $post;
+        break;
+    case "comment":
+        $post = new Post(
+            $faker->randomDigitNotNull(),
+            $user,
+            $faker->realText(rand(10,15)),
+            $faker->realText(rand(50,100))
+        );
+        $comment = new Comment(
+            $faker->randomDigitNotNull(),
+            $user,
+            $post,
+            $faker->realText(rand(50,100))
+        );
+        echo $comment;
+        break;
+    default:
+        echo 'Error! Try user, post or comment as arguments for success';
 }
 
-echo $post;
-echo $comment;
+

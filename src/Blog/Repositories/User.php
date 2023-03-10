@@ -27,7 +27,7 @@ class User
     }
 
 
-    public function getUsername(): Name
+    public function name(): Name
     {
         return $this->username;
     }

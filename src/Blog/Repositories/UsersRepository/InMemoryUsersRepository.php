@@ -1,8 +1,8 @@
 <?php
 
-namespace Geekbrains\PhpAdvanced\Blog\Repositories;
+namespace Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
-use Geekbrains\PhpAdvanced\Blog\User;
+use Geekbrains\PhpAdvanced\Blog\Repositories\User;
 
 class InMemoryUsersRepository
 {

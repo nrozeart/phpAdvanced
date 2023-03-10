@@ -4,23 +4,15 @@ namespace Geekbrains\PhpAdvanced\Blog\Repositories;
 
 class Comment
 {
-        private int $id;
-        private User $user;
-        private Post $post;
-        private string $commentText;
 
-    /**
-     * @param int $id
-     * @param User $user
-     * @param Post $post
-     * @param string $commentText
-     */
-    public function __construct(int $id, User $user, Post $post, string $commentText)
+    public function __construct(
+        private int $id,
+        private User $user,
+        private Post $post,
+        private string $commentText
+        )
     {
-        $this->id = $id;
-        $this->user = $user;
-        $this->post = $post;
-        $this->commentText = $commentText;
+
     }
 
 
@@ -91,6 +83,6 @@ class Comment
 
     public function __toString()
     {
-        return $this->user . ' опубликовал комментарий: "' . $this->commentText .PHP_EOL;
+        return $this->user . ' опубликовал комментарий: "' . $this->commentText . '"'.PHP_EOL;
     }
 }

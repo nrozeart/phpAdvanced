@@ -4,6 +4,8 @@ use Geekbrains\PhpAdvanced\Blog\Commands\Arguments;
 use Geekbrains\PhpAdvanced\Blog\Commands\CreateUserCommand;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\CommandException;
+use Geekbrains\PhpAdvanced\Blog\Post;
+use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\User;
 use Geekbrains\PhpAdvanced\Blog\UUID;
@@ -11,20 +13,32 @@ use Geekbrains\PhpAdvanced\Person\Name;
 
     require_once __DIR__ . '/vendor/autoload.php';
     // Создаём объект SQLite-репозитория
-$usersRepository = new SqliteUsersRepository(
-    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-);
-$command = new CreateUserCommand($usersRepository);
+$connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
+$userRepository = new SqliteUsersRepository($connection);
+$postRepository = new SqlitePostsRepository($connection);
+
 try {
-// "Заворачиваем" $argv в объект типа Arguments
-    $command->handle(Arguments::fromArgv($argv));
-}
-// Так как мы добавили исключение ArgumentsException
-// имеет смысл обрабатывать все исключения приложения,
-// а не только исключение CommandException
-catch (AppException $e) {
+    $user = $userRepository->get(new UUID('8aa1fe08-f293-4b2a-afef-ca9841bf14fb'));
+
+    $post = $postRepository->get(new UUID('865f75b6-91a9-4770-8f9a-d75cf2188978'));
+
+    print_r($post);
+
+} catch (AppException $e) {
     echo "{$e->getMessage()}\n";
 }
+
+//$command = new CreateUserCommand($usersRepository);
+//try {
+//// "Заворачиваем" $argv в объект типа Arguments
+//    $command->handle(Arguments::fromArgv($argv));
+//}
+//// Так как мы добавили исключение ArgumentsException
+//// имеет смысл обрабатывать все исключения приложения,
+//// а не только исключение CommandException
+//catch (AppException $e) {
+//    echo "{$e->getMessage()}\n";
+//}
 
 
 

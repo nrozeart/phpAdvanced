@@ -33,6 +33,10 @@ final class Arguments
         }
         return new self($arguments);
     }
+
+    /**
+     * @throws ArgumentsException
+     */
     public function get(string $argument): string
     {
         if (!array_key_exists($argument, $this->arguments)) {

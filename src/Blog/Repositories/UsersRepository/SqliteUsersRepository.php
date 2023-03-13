@@ -21,8 +21,21 @@ class SqliteUsersRepository implements UsersRepositoryInterface
     {
         // Подготавливаем запрос
         $statement = $this->connection->prepare(
-
-            'INSERT INTO users (first_name, last_name, uuid, username) VALUES (:first_name, :last_name, :uuid, :username)'
+            'INSERT INTO users (
+                   first_name, 
+                   last_name, 
+                   uuid, 
+                   username) 
+            VALUES (
+                    :first_name, 
+                    :last_name, 
+                    :uuid, 
+                    :username
+                    )
+                    ON CONFLICT(uuid) DO UPDATE SET
+                    first_name=:first_name,
+                    last_name=:last_name
+                    '
         );
         // Выполняем запрос с конкретными значениями
         $statement->execute([
@@ -47,13 +60,6 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         $statement->execute([
             ':uuid' => (string)$uuid,
         ]);
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-// Бросаем исключение, если пользователь не найден
-        if (false === $result) {
-            throw new UserNotFoundException(
-                "Cannot get user: $uuid"
-            );
-        }
         return $this->getUser($statement, $uuid);
     }
 

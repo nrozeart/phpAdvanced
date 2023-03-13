@@ -11,5 +11,9 @@
             "email": "igorevna.nailya@mail.ru"
         }
     ],
-    "require": {}
+    "require": {
+        "fakerphp/faker": "^1.21",
+        "ext-pdo": "*",
+        "symfony/polyfill-uuid": "^1.27"
+    }
 }

@@ -1,35 +1,35 @@
 <?php
 
-namespace Geekbrains\PhpAdvanced\Blog\Repositories;
+namespace Geekbrains\PhpAdvanced\Blog;
+
 
 class Comment
 {
 
     public function __construct(
-        private int $id,
-        private User $user,
+        private UUID $uuid,
         private Post $post,
+        private User $user,
         private string $commentText
         )
     {
 
     }
 
-
     /**
-     * @return int
+     * @return UUID
      */
-    public function getId(): int
+    public function getUuid(): UUID
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     /**
-     * @param int $id
+     * @param UUID $uuid
      */
-    public function setId(int $id): void
+    public function setUuid(UUID $uuid): void
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
     }
 
     /**
@@ -79,6 +79,8 @@ class Comment
     {
         $this->commentText = $commentText;
     }
+
+
 
 
     public function __toString()

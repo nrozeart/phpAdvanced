@@ -35,6 +35,10 @@ class SqlitePostsRepository implements PostsRepositoryInterface
     }
 
 
+    /**
+     * @throws InvalidArgumentException
+     * @throws PostNotFoundException
+     */
     public function get(UUID $uuid): Post
     {
 

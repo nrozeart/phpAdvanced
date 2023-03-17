@@ -4,6 +4,7 @@ namespace Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository;
 
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\PostNotFoundException;
+use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Post;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\UUID;
@@ -54,6 +55,7 @@ class SqlitePostsRepository implements PostsRepositoryInterface
     /**
      * @throws PostNotFoundException
      * @throws InvalidArgumentException
+     * @throws UserNotFoundException
      */
     private function getPost(\PDOStatement $statement, string $postUuId):Post {
         $result = $statement->fetch(PDO::FETCH_ASSOC);

@@ -11,5 +11,16 @@
             "email": "igorevna.nailya@mail.ru"
         }
     ],
-    "require": {}
+    "require": {
+        "ext-pdo": "*",
+        "symfony/polyfill-uuid": "^1.27"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "fakerphp/faker": "^1.21",
+        "roave/security-advisories": "dev-latest"
+    },
+    "scripts": {
+        "test": "phpunit tests --testdox --colors"
+    }
 }

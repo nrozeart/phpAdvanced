@@ -1,34 +1,79 @@
 <?php
 
+use Geekbrains\PhpAdvanced\Blog\Commands\Arguments;
+use Geekbrains\PhpAdvanced\Blog\Commands\CreateUserCommand;
+use Geekbrains\PhpAdvanced\Blog\Comment;
+use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
+use Geekbrains\PhpAdvanced\Blog\Exceptions\CommandException;
 use Geekbrains\PhpAdvanced\Blog\Post;
+use Geekbrains\PhpAdvanced\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
+use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\SqlitePostsRepository;
+use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\User;
-use Geekbrains\PhpAdvanced\Person\{Person};
+use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Person\Name;
 
-//сокр. для use src\Blog\User as User;
-// сокр. для use Person\Name as Name; и use Person\Person as Person;
+    require_once __DIR__ . '/vendor/autoload.php';
+    // Создаём объект SQLite-репозитория
+$connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
+$userRepository = new SqliteUsersRepository($connection);
+$postRepository = new SqlitePostsRepository($connection);
+$commentRepository = new SqliteCommentsRepository($connection);
 
-include __DIR__ . "/vendor/autoload.php";
 
-//spl_autoload_register('load');
-function load ($classname) {
-    $file = $classname . ".php";
-    $file = str_replace('\\', '/', $file);
-//    $file = str_replace('Geekbrains', 'src', $file);
+try {
+    $user = $userRepository->get(new UUID('8aa1fe08-f293-4b2a-afef-ca9841bf14fb'));
+    $post = $postRepository->get(new UUID('865f75b6-91a9-4770-8f9a-d75cf2188978'));
+    $comment = $commentRepository->get(new UUID('3437d0f6-8939-4d47-af37-33ae09206570'));
 
-    if(file_exists($file)) {
-        include $file;
-    }
+//    $comment = new Comment(
+//        UUID::random(),
+//    $post,
+//    $user,
+//    'текст комментария');
+
+    print_r($comment);
+
+} catch (AppException $e) {
+    echo "{$e->getMessage()}\n";
 }
 
-$name = new Name('Peter', 'Sidorov');
-$user = new User(1, $name, "Admin");
-echo $user;
+//$command = new CreateUserCommand($usersRepository);
+//try {
+//// "Заворачиваем" $argv в объект типа Arguments
+//    $command->handle(Arguments::fromArgv($argv));
+//}
+//// Так как мы добавили исключение ArgumentsException
+//// имеет смысл обрабатывать все исключения приложения,
+//// а не только исключение CommandException
+//catch (AppException $e) {
+//    echo "{$e->getMessage()}\n";
+//}
 
-$person = new Person($name, new DateTimeImmutable());
 
-$post = new Post(
-    1,
-    $person,
-    'Мой новый пост');
-echo $post;
+
+
+
+
+
+
+
+
+
+//include __DIR__ . "/vendor/autoload.php";
+//
+////Создаём объект подключения к SQLite
+//$connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
+//
+////Создаём объект репозитория
+//$usersRepository = new SqliteUsersRepository($connection);
+////Добавляем в репозиторий несколько пользователей
+////$usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), "admin"));
+////$usersRepository->save(new User(UUID::random(), new Name('Anna', 'Petrova'), "user"));
+//
+//try {
+//    //$usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), "admin"));
+//    echo $usersRepository->getByUsername("admin");
+//} catch (Exception $e) {
+//    echo $e->getMessage();
+//}

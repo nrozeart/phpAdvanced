@@ -32,7 +32,7 @@ try {
 //    $user,
 //    'текст комментария');
 
-    print_r($comment);
+    echo($comment);
 
 } catch (AppException $e) {
     echo "{$e->getMessage()}\n";

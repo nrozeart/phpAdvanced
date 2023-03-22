@@ -2,15 +2,18 @@
 
 namespace Geekbrains\PhpAdvanced\Blog;
 
-class Post
+
+class Comment
 {
+
     public function __construct(
         private UUID $uuid,
+        private Post $post,
         private User $user,
-        private string $title,
-        private string $text,
-    )
+        private string $commentText
+        )
     {
+
     }
 
     /**
@@ -46,41 +49,42 @@ class Post
     }
 
     /**
+     * @return Post
+     */
+    public function getPost(): Post
+    {
+        return $this->post;
+    }
+
+    /**
+     * @param Post $post
+     */
+    public function setPost(Post $post): void
+    {
+        $this->post = $post;
+    }
+
+    /**
      * @return string
      */
-    public function getTitle(): string
+    public function getCommentText(): string
     {
-        return $this->title;
+        return $this->commentText;
     }
 
     /**
-     * @param string $title
+     * @param string $commentText
      */
-    public function setTitle(string $title): void
+    public function setCommentText(string $commentText): void
     {
-        $this->title = $title;
+        $this->commentText = $commentText;
     }
 
-    /**
-     * @return string
-     */
-    public function getText(): string
-    {
-        return $this->text;
-    }
-
-    /**
-     * @param string $text
-     */
-    public function setText(string $text): void
-    {
-        $this->text = $text;
-    }
 
 
 
     public function __toString()
     {
-        return $this->user . ' опубликовал статью "' . $this->text . '" под названием: "' . $this->title . '"' . PHP_EOL;
+        return $this->user . ' опубликовал комментарий: "' . $this->commentText . '"'.PHP_EOL;
     }
 }

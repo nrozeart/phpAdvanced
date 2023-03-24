@@ -38,17 +38,17 @@ try {
     echo "{$e->getMessage()}\n";
 }
 
-//$command = new CreateUserCommand($usersRepository);
-//try {
-//// "Заворачиваем" $argv в объект типа Arguments
-//    $command->handle(Arguments::fromArgv($argv));
-//}
-//// Так как мы добавили исключение ArgumentsException
-//// имеет смысл обрабатывать все исключения приложения,
-//// а не только исключение CommandException
-//catch (AppException $e) {
-//    echo "{$e->getMessage()}\n";
-//}
+$command = new CreateUserCommand($userRepository);
+try {
+// "Заворачиваем" $argv в объект типа Arguments
+    $command->handle(Arguments::fromArgv($argv));
+}
+// Так как мы добавили исключение ArgumentsException
+// имеет смысл обрабатывать все исключения приложения,
+// а не только исключение CommandException
+catch (AppException $e) {
+    echo "{$e->getMessage()}\n";
+}
 
 
 

@@ -22,14 +22,14 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         // Подготавливаем запрос
         $statement = $this->connection->prepare(
             'INSERT INTO users (
+                   uuid,
                    first_name, 
                    last_name, 
-                   uuid, 
                    username) 
             VALUES (
+                    :uuid, 
                     :first_name, 
                     :last_name, 
-                    :uuid, 
                     :username
                     )
                     ON CONFLICT(uuid) DO UPDATE SET
@@ -39,9 +39,9 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         );
         // Выполняем запрос с конкретными значениями
         $statement->execute([
+            ':uuid' => (string)$user->uuid(),
             ':first_name' => $user->name()->first(),
             ':last_name' => $user->name()->last(),
-            ':uuid' => (string)$user->uuid(),
             ':username' => $user->username()
         ]);
     }

@@ -14,7 +14,8 @@
     "require": {
         "ext-pdo": "*",
         "symfony/polyfill-uuid": "^1.27",
-      "ext-mbstring": "*"
+      "ext-mbstring": "*",
+      "ext-http": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*",

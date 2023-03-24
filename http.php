@@ -69,9 +69,9 @@ $routes = [
         'GET' => [
             '/users/show' => FindByUsername::class,
         ],
-            'POST' => [
-            '/users/create' => CreateUser::class,
-            '/posts/create' => CreatePost::class,
+        'POST' => [
+        '/users/create' => CreateUser::class,
+        '/posts/create' => CreatePost::class,
         ],
     ];
 //    'DELETE' => [
@@ -98,7 +98,8 @@ $action = $container->get($actionClassName);
 
 try {
     $response = $action->handle($request);
-} catch (AppException $e) {
+
+} catch (Exception $e) {
     (new ErrorResponse($e->getMessage()))->send();
 }
 $response->send();

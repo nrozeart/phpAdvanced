@@ -5,24 +5,54 @@ use Geekbrains\PhpAdvanced\Person\Name;
 
 class User
 {
-    private int $id;
-    private Name $username;
-    private string $login;
+    private UUID $uuid;
+    private Name $name;
+    private string $username;
 
     /**
-     * @param int $id
-     * @param Name $username
-     * @param string $login
+     * @param UUID $uuid
+     * @param Name $name
+     * @param string $username
      */
-    public function __construct(int $id, Name $username, string $login)
+
+    //конструктор
+    public function __construct(UUID $uuid, Name $name, string $username)
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
+        $this->name = $name;
         $this->username = $username;
-        $this->login = $login;
     }
+
+    //геттеры и сеттеры
+    public function uuid(): UUID
+    {
+        return $this->uuid;
+    }
+
+    public function name(): Name
+    {
+        return $this->name;
+    }
+
+    public function setName(Name $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function username(): string
+    {
+        return $this->username;
+    }
+
+    public function setLogin(string $username): void
+    {
+        $this->username = $username;
+    }
+
+
     public function __toString(): string
     {
-        return "Юзер $this->id с именем $this->username и логином $this->login." . PHP_EOL;
+        return "Юзер $this->uuid с именем $this->name и логином $this->username";
     }
 
 }

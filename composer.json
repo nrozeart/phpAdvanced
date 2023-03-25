@@ -5,11 +5,30 @@
             "Geekbrains\\PhpAdvanced\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "GeekBrains\\Blog\\UnitTests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Nelly Rozova",
             "email": "igorevna.nailya@mail.ru"
         }
     ],
-    "require": {}
+    "require": {
+        "ext-pdo": "*",
+        "symfony/polyfill-uuid": "^1.27",
+      "ext-mbstring": "*",
+      "ext-http": "*",
+        "psr/container": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "fakerphp/faker": "^1.21",
+        "roave/security-advisories": "dev-latest"
+    },
+    "scripts": {
+        "test": "phpunit tests --testdox --colors"
+    }
 }

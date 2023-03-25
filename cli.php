@@ -1,34 +1,40 @@
 <?php
 
-use Geekbrains\PhpAdvanced\Blog\Post;
-use Geekbrains\PhpAdvanced\Blog\User;
-use Geekbrains\PhpAdvanced\Person\{Person};
-use Geekbrains\PhpAdvanced\Person\Name;
+use Geekbrains\PhpAdvanced\Blog\Commands\Arguments;
+use Geekbrains\PhpAdvanced\Blog\Commands\CreateUserCommand;
+use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
 
-//сокр. для use src\Blog\User as User;
-// сокр. для use Person\Name as Name; и use Person\Person as Person;
 
-include __DIR__ . "/vendor/autoload.php";
-
-//spl_autoload_register('load');
-function load ($classname) {
-    $file = $classname . ".php";
-    $file = str_replace('\\', '/', $file);
-//    $file = str_replace('Geekbrains', 'src', $file);
-
-    if(file_exists($file)) {
-        include $file;
-    }
+// Подключаем файл bootstrap.php
+// и получаем настроенный контейнер
+$container = require __DIR__ . '/bootstrap.php';
+// При помощи контейнера создаём команду
+$command = $container->get(CreateUserCommand::class);
+try {
+    $command->handle(Arguments::fromArgv($argv));
+} catch (AppException $e) {
+    echo "{$e->getMessage()}\n";
 }
 
-$name = new Name('Peter', 'Sidorov');
-$user = new User(1, $name, "Admin");
-echo $user;
 
-$person = new Person($name, new DateTimeImmutable());
 
-$post = new Post(
-    1,
-    $person,
-    'Мой новый пост');
-echo $post;
+
+
+
+//include __DIR__ . "/vendor/autoload.php";
+//
+////Создаём объект подключения к SQLite
+//$connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
+//
+////Создаём объект репозитория
+//$usersRepository = new SqliteUsersRepository($connection);
+////Добавляем в репозиторий несколько пользователей
+////$usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), "admin"));
+////$usersRepository->save(new User(UUID::random(), new Name('Anna', 'Petrova'), "user"));
+//
+//try {
+//    //$usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), "admin"));
+//    echo $usersRepository->getByUsername("admin");
+//} catch (Exception $e) {
+//    echo $e->getMessage();
+//}

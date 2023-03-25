@@ -5,6 +5,11 @@
             "Geekbrains\\PhpAdvanced\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "GeekBrains\\Blog\\UnitTests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Nelly Rozova",
@@ -15,7 +20,8 @@
         "ext-pdo": "*",
         "symfony/polyfill-uuid": "^1.27",
       "ext-mbstring": "*",
-      "ext-http": "*"
+      "ext-http": "*",
+        "psr/container": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*",

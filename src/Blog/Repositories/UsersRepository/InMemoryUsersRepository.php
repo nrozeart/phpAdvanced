@@ -2,7 +2,8 @@
 
 namespace Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
-use Geekbrains\PhpAdvanced\Blog\Repositories\User;
+use Geekbrains\PhpAdvanced\Blog\User;
+use Geekbrains\PhpAdvanced\Blog\UUID;
 
 class InMemoryUsersRepository implements UsersRepositoryInterface
 {

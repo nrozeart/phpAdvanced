@@ -38,8 +38,7 @@ $response = $action->handle($request);
 // Проверяем, что ответ - неудачный
 $this->assertInstanceOf(ErrorResponse::class, $response);
 // Описываем ожидание того, что будет отправлено в поток вывода
-$this->expectOutputString('{"success":false,"reason":"No such query param
-in the request: username"}');
+$this->expectOutputString('{"success":false,"reason":"No such query param in the request: username"}');
 // Отправляем ответ в поток вывода
 $response->send();
 }

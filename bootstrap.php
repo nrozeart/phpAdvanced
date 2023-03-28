@@ -1,6 +1,8 @@
 <?php
 
 use Geekbrains\PhpAdvanced\Blog\Container\DIContainer;
+use Geekbrains\PhpAdvanced\Blog\Repositories\LikesRepository\LikesRepositoryInterface;
+use Geekbrains\PhpAdvanced\Blog\Repositories\LikesRepository\SqliteLikesRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
@@ -16,6 +18,12 @@ $container->bind(
     PDO::class,
     new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
 );
+
+$container->bind(
+    LikesRepositoryInterface::class,
+    SqliteLikesRepository::class
+);
+
 // 2. репозиторий статей
 $container->bind(
     PostsRepositoryInterface::class,

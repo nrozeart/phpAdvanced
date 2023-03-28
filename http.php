@@ -3,6 +3,7 @@
 use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use Geekbrains\PhpAdvanced\Http\Actions\Likes\CreatePostLike;
 use Geekbrains\PhpAdvanced\Http\Actions\Posts\CreatePost;
 use Geekbrains\PhpAdvanced\Http\Actions\Posts\DeletePost;
 use Geekbrains\PhpAdvanced\Http\Actions\User\CreateUser;
@@ -41,6 +42,7 @@ $routes = [
         'POST' => [
             '/users/create' => CreateUser::class,
             '/posts/create' => CreatePost::class,
+            '/post-likes/create' => CreatePostLike::class,
         ],
 
         'DELETE' => [

@@ -10,6 +10,7 @@ use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInte
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Http\Actions\ActionInterface;
+use Geekbrains\PhpAdvanced\Http\Auth\IdentificationInterface;
 use Geekbrains\PhpAdvanced\Http\Response;
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Http\ErrorResponse;
@@ -21,29 +22,23 @@ class CreatePost implements ActionInterface
 // Внедряем репозитории статей и пользователей
     public function __construct(
         private PostsRepositoryInterface $postsRepository,
-        private UsersRepositoryInterface $usersRepository,
-        // Внедряем контракт логгера
+    // Вместо контракта репозитория пользователей
+    // внедряем контракт идентификации
+        private IdentificationInterface $identification,        // Внедряем контракт логгера
         private LoggerInterface $logger,
     ) {
     }
     public function handle(Request $request): Response
     {
-// Пытаемся создать UUID пользователя из данных запроса
-        try {
-            $authorUuid = new UUID($request->jsonBodyField('author_uuid'));
-        } catch (HttpException | InvalidArgumentException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
-        try {
-            $user = $this->usersRepository->get($authorUuid);
-        } catch (UserNotFoundException $exception) {
-            return new ErrorResponse($exception->getMessage());
-        }
-// Генерируем UUID для новой статьи
+        // Пытаемся создать UUID пользователя из данных запроса
+        // Идентифицируем пользователя -
+        // автора статьи
+        $user = $this->identification->user($request);
+        // Генерируем UUID для новой статьи
         $newPostUuid = UUID::random();
         try {
-// Пытаемся создать объект статьи
-// из данных запроса
+        // Пытаемся создать объект статьи
+        // из данных запроса
             $post = new Post(
                 $newPostUuid,
                 $user,

@@ -3,6 +3,7 @@
 use Geekbrains\PhpAdvanced\Blog\Commands\Arguments;
 use Geekbrains\PhpAdvanced\Blog\Commands\CreateUserCommand;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
+use Psr\Log\LoggerInterface;
 
 
 // Подключаем файл bootstrap.php
@@ -10,9 +11,18 @@ use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
 $container = require __DIR__ . '/bootstrap.php';
 // При помощи контейнера создаём команду
 $command = $container->get(CreateUserCommand::class);
+
+// Получаем объект логгера из контейнера
+$logger = $container->get(LoggerInterface::class);
+
 try {
     $command->handle(Arguments::fromArgv($argv));
-} catch (AppException $e) {
+} catch (Exception $e) {
+    // Логируем информацию об исключении.
+// Объект исключения передаётся логгеру
+// с ключом "exception".
+// Уровень логирования – ERROR
+    $logger->error($e->getMessage(), ['exception' => $e]);
     echo "{$e->getMessage()}\n";
 }
 

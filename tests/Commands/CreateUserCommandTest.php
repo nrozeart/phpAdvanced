@@ -1,6 +1,7 @@
 <?php
 
 namespace Geekbrains\PhpAdvanced\Blog\UnitTests\Commands;
+use GeekBrains\Blog\UnitTests\DummyLogger;
 use Geekbrains\PhpAdvanced\Blog\Commands\Arguments;
 use Geekbrains\PhpAdvanced\Blog\Commands\CreateUserCommand;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\ArgumentsException;
@@ -22,7 +23,7 @@ class CreateUserCommandTest extends TestCase
             // У команды одна зависимость - UsersRepositoryInterface
             $command = new CreateUserCommand(
             // Передаём наш стаб в качестве реализации UsersRepositoryInterface
-                new DummyUsersRepository()
+                new DummyUsersRepository(), new DummyLogger()
             );
             // Описываем тип ожидаемого исключения
             $this->expectException(CommandException::class);
@@ -54,8 +55,12 @@ class CreateUserCommandTest extends TestCase
     // Тест проверяет, что команда действительно требует фамилию пользователя
     public function testItRequiresLastName(): void
     {
-    // Передаём в конструктор команды объект, возвращаемый нашей функцией
-            $command = new CreateUserCommand($this->makeUsersRepository());
+        // Передаём в конструктор команды объект, возвращаемый нашей функцией
+        $command = new CreateUserCommand(
+            $this->makeUsersRepository(),
+            // Тестовая реализация логгера
+            new DummyLogger()
+        );
             $this->expectException(ArgumentsException::class);
             $this->expectExceptionMessage('No such argument: last_name');
             $command->handle(new Arguments([
@@ -69,7 +74,7 @@ class CreateUserCommandTest extends TestCase
     public function testItRequiresFirstName(): void
     {
     // Вызываем ту же функцию
-            $command = new CreateUserCommand($this->makeUsersRepository());
+            $command = new CreateUserCommand($this->makeUsersRepository(), new DummyLogger());
             $this->expectException(ArgumentsException::class);
             $this->expectExceptionMessage('No such argument: first_name');
             $command->handle(new Arguments(['username' => 'Ivan']));
@@ -106,7 +111,7 @@ class CreateUserCommandTest extends TestCase
                 }
             };
     // Передаём наш мок в команду
-            $command = new CreateUserCommand($usersRepository);
+            $command = new CreateUserCommand($usersRepository, new DummyLogger());
     // Запускаем команду
             $command->handle(new Arguments([
                 'username' => 'Ivan',

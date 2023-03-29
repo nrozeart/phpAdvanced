@@ -11,6 +11,7 @@ use Geekbrains\PhpAdvanced\Http\Actions\User\FindByUsername;
 use Geekbrains\PhpAdvanced\Http\ErrorResponse;
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 // Подключаем файл bootstrap.php
 // и получаем настроенный контейнер
@@ -21,18 +22,25 @@ $request = new Request(
     file_get_contents('php://input'),
 );
 
+// Получаем объект логгера из контейнера
+$logger = $container->get(LoggerInterface::class);
 try {
     $path = $request->path();
-} catch (HttpException) {
+} catch (HttpException $e) {
+// Логируем сообщение с уровнем WARNING
+    $logger->warning($e->getMessage());
     (new ErrorResponse)->send();
-    return;
+return;
 }
 try {
     $method = $request->method();
-} catch (HttpException) {
+} catch (HttpException $e) {
+// Логируем сообщение с уровнем WARNING
+    $logger->warning($e->getMessage());
     (new ErrorResponse)->send();
     return;
 }
+
 // Ассоциируем маршруты с именами классов действий,
 // вместо готовых объектов
 $routes = [
@@ -50,22 +58,25 @@ $routes = [
         ]
 ];
 
-if (!array_key_exists($method, $routes)) {
-    (new ErrorResponse("Route not found: $method $path"))->send();
+if (!array_key_exists($method, $routes)
+    || !array_key_exists($path, $routes[$method])) {
+// Логируем сообщение с уровнем NOTICE
+    $message = "Route not found: $method $path";
+    $logger->notice($message);
+    (new ErrorResponse($message))->send();
     return;
 }
-if (!array_key_exists($path, $routes[$method])) {
-    (new ErrorResponse("Route not found: $method $path"))->send();
-    return;
-}
-// Получаем имя класса действия для маршрута
 $actionClassName = $routes[$method][$path];
-// С помощью контейнера
-// создаём объект нужного действия
-$action = $container->get($actionClassName);
 try {
+    $action = $container->get($actionClassName);
     $response = $action->handle($request);
-} catch (AppException $e) {
-    (new ErrorResponse($e->getMessage()))->send();
+} catch (Exception $e) {
+// Логируем сообщение с уровнем ERROR
+    $logger->error($e->getMessage(), ['exception' => $e]);
+// Больше не отправляем пользователю
+// конкретное сообщение об ошибке,
+// а только логируем его
+    (new ErrorResponse)->send();
+    return;
 }
 $response->send();

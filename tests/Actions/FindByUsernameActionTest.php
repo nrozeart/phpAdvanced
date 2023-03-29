@@ -1,6 +1,6 @@
 <?php
 
-namespace Actions;
+namespace GeekBrains\Blog\UnitTests\Actions;
 
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;

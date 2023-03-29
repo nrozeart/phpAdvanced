@@ -2,10 +2,10 @@
 
 namespace GeekBrains\Blog\UnitTests\Container;
 
-use Geekbrains\PhpAdvanced\Blog\Container\DIContainer;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\NotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\InMemoryUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
+use Geekbrains\PhpAdvanced\Http\Container\DIContainer;
 use PHPUnit\Framework\TestCase;
 
 class DIContainerTest extends TestCase

@@ -14,6 +14,7 @@ use Geekbrains\PhpAdvanced\Http\Response;
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Http\ErrorResponse;
 use Geekbrains\PhpAdvanced\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 class CreatePost implements ActionInterface
 {
@@ -21,6 +22,8 @@ class CreatePost implements ActionInterface
     public function __construct(
         private PostsRepositoryInterface $postsRepository,
         private UsersRepositoryInterface $usersRepository,
+        // Внедряем контракт логгера
+        private LoggerInterface $logger,
     ) {
     }
     public function handle(Request $request): Response
@@ -52,6 +55,10 @@ class CreatePost implements ActionInterface
 }
 // Сохраняем новую статью в репозитории
         $this->postsRepository->save($post);
+
+        // Логируем UUID новой статьи
+        $this->logger->info("Post created: $newPostUuid");
+
 // Возвращаем успешный ответ,
 // содержащий UUID новой статьи
         return new SuccessfulResponse([

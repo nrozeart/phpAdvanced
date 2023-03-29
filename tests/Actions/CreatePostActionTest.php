@@ -1,7 +1,8 @@
 <?php
 
-namespace Actions;
+namespace GeekBrains\Blog\UnitTests\Actions;
 
+use GeekBrains\Blog\UnitTests\DummyLogger;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\PostNotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
@@ -104,7 +105,7 @@ class CreatePostActionTest extends TestCase
             ),
         ]);
 
-        $action = new CreatePost($usersRepository, $postsRepository);
+        $action = new CreatePost($postsRepository, $usersRepository, new DummyLogger());
 
         $response = $action->handle($request);
 
@@ -141,7 +142,7 @@ class CreatePostActionTest extends TestCase
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository([]);
 
-        $action = new CreatePost($usersRepository, $postsRepository);
+        $action = new CreatePost($postsRepository, $usersRepository, new DummyLogger());
 
         $response = $action->handle($request);
 
@@ -168,7 +169,7 @@ class CreatePostActionTest extends TestCase
             ),
         ]);
 
-        $action = new CreatePost($usersRepository, $postsRepository);
+        $action = new CreatePost($postsRepository, $usersRepository, new DummyLogger());
 
         $response = $action->handle($request);
 

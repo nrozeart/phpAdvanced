@@ -24,4 +24,8 @@ class InMemoryUsersRepository implements UsersRepositoryInterface
             }
             throw new UserNotFoundException("User not found: $uuid");
         }
+    public function getByUsername(string $username): User
+    {
+        // TODO: Implement getByUsername() method.
+    }
 }

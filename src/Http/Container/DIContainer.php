@@ -1,6 +1,6 @@
 <?php
 
-namespace Geekbrains\PhpAdvanced\Blog\Container;
+namespace Geekbrains\PhpAdvanced\Http\Container;
 
 use Geekbrains\PhpAdvanced\Blog\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;

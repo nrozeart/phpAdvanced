@@ -76,7 +76,7 @@ try {
 // Больше не отправляем пользователю
 // конкретное сообщение об ошибке,
 // а только логируем его
-    (new ErrorResponse)->send();
+    (new ErrorResponse($e->getMessage()))->send();
     return;
 }
 $response->send();

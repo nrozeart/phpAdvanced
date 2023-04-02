@@ -7,8 +7,10 @@ use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInte
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
+use Geekbrains\PhpAdvanced\Http\Auth\AuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\Auth\IdentificationInterface;
 use Geekbrains\PhpAdvanced\Http\Auth\JsonBodyUsernameIdentification;
+use Geekbrains\PhpAdvanced\Http\Auth\PasswordAuthentication;
 use Geekbrains\PhpAdvanced\Http\Container\DIContainer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -60,6 +62,10 @@ if ('yes' === $_ENV['LOG_TO_CONSOLE']) {
         );
 }
 
+$container->bind(
+    AuthenticationInterface::class,
+PasswordAuthentication::class
+);
 
 $container->bind(
     IdentificationInterface::class,

@@ -2,6 +2,7 @@
 
 namespace Geekbrains\PhpAdvanced\Http\Actions\Posts;
 
+use Geekbrains\PhpAdvanced\Blog\Exceptions\AuthException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\HttpException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
@@ -10,6 +11,7 @@ use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInte
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Http\Actions\ActionInterface;
+use Geekbrains\PhpAdvanced\Http\Auth\AuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\Auth\IdentificationInterface;
 use Geekbrains\PhpAdvanced\Http\Response;
 use Geekbrains\PhpAdvanced\Http\Request;
@@ -24,7 +26,8 @@ class CreatePost implements ActionInterface
         private PostsRepositoryInterface $postsRepository,
     // Вместо контракта репозитория пользователей
     // внедряем контракт идентификации
-        private IdentificationInterface $identification,        // Внедряем контракт логгера
+        private AuthenticationInterface $authentication,
+        // Внедряем контракт логгера
         private LoggerInterface $logger,
     ) {
     }
@@ -33,7 +36,11 @@ class CreatePost implements ActionInterface
         // Пытаемся создать UUID пользователя из данных запроса
         // Идентифицируем пользователя -
         // автора статьи
-        $user = $this->identification->user($request);
+        try {
+            $user = $this->authentication->user($request);
+        } catch (AuthException $e) {
+            return new ErrorResponse($e->getMessage());
+        }
         // Генерируем UUID для новой статьи
         $newPostUuid = UUID::random();
         try {

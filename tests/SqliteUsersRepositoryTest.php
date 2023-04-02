@@ -1,7 +1,8 @@
 <?php
 
-namespace Geekbrains\PhpAdvanced\Blog\UnitTests;
+namespace GeekBrains\Blog\UnitTests;
 
+use GeekBrains\Blog\UnitTests\DummyLogger;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
@@ -35,7 +36,7 @@ class SqliteUsersRepositoryTest extends TestCase
 // стаб запроса - при вызове метода prepare
         $connectionStub->method('prepare')->willReturn($statementStub);
 // 1. Передаём в репозиторий стаб подключения
-        $repository = new SqliteUsersRepository($connectionStub);
+        $repository = new SqliteUsersRepository($connectionStub, new DummyLogger());
 // Ожидаем, что будет брошено исключение
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('Cannot find user: Ivan');
@@ -57,22 +58,24 @@ class SqliteUsersRepositoryTest extends TestCase
             ->method('execute') // метод execute
             ->with([ // с единственным аргументом - массивом
                 ':uuid' => '123e4567-e89b-12d3-a456-426614174000',
-                ':username' => 'ivan123',
                 ':first_name' => 'Ivan',
                 ':last_name' => 'Nikitin',
+                ':username' => 'ivan123',
+                ':password' => 'some_password',
             ]);
 // 3. При вызове метода prepare стаб подключения
 // возвращает мок запроса
         $connectionStub->method('prepare')->willReturn($statementMock);
 // 1. Передаём в репозиторий стаб подключения
-        $repository = new SqliteUsersRepository($connectionStub);
+        $repository = new SqliteUsersRepository($connectionStub, new DummyLogger());
 // Вызываем метод сохранения пользователя
         $repository->save(
             new User( // Свойства пользователя точно такие,
 // как и в описании мока
                 new UUID('123e4567-e89b-12d3-a456-426614174000'),
                 new Name('Ivan', 'Nikitin'),
-                'ivan123'
+                'ivan123',
+                'some_password'
             )
         );
     }

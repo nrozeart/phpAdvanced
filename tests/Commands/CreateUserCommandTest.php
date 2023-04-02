@@ -1,11 +1,12 @@
 <?php
 
-namespace Geekbrains\PhpAdvanced\Blog\UnitTests\Commands;
+namespace GeekBrains\Blog\UnitTests\Commands;
 use GeekBrains\Blog\UnitTests\DummyLogger;
 use Geekbrains\PhpAdvanced\Blog\Commands\Arguments;
 use Geekbrains\PhpAdvanced\Blog\Commands\CreateUserCommand;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\ArgumentsException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\CommandException;
+use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\DummyUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
@@ -17,10 +18,32 @@ class CreateUserCommandTest extends TestCase
 {
             // Проверяем, что команда создания пользователя бросает исключение,
             // если пользователь с таким именем уже существует
+    /**
+     * @throws ArgumentsException
+     * @throws InvalidArgumentException
+     * @throws CommandException
+     */
+
+    public function testItRequiresPassword(): void
+    {
+        $command = new CreateUserCommand(
+            $this->makeUsersRepository(),
+            new DummyLogger()
+        );
+        $this->expectException(ArgumentsException::class);
+        $this->expectExceptionMessage('No such argument: password');
+        $command->handle(new Arguments([
+            'username' => 'Ivan'
+        ]));
+        }
+
+    /**
+     * @throws ArgumentsException
+     * @throws InvalidArgumentException
+     */
     public function testItThrowsAnExceptionWhenUserAlreadyExists(): void
     {
             // Создаём объект команды
-            // У команды одна зависимость - UsersRepositoryInterface
             $command = new CreateUserCommand(
             // Передаём наш стаб в качестве реализации UsersRepositoryInterface
                 new DummyUsersRepository(), new DummyLogger()
@@ -30,7 +53,10 @@ class CreateUserCommandTest extends TestCase
             // и его сообщение
              $this->expectExceptionMessage('User already exists: Ivan');
             // Запускаем команду с аргументами
-            $command->handle(new Arguments(['username' => 'Ivan']));
+            $command->handle(new Arguments([
+                'username' => 'Ivan',
+                'password' => '123'
+            ]));
     }
 
 
@@ -67,7 +93,7 @@ class CreateUserCommandTest extends TestCase
                 'username' => 'Ivan',
     // Нам нужно передать имя пользователя,
     // чтобы дойти до проверки наличия фамилии
-                'first_name' => 'Ivan',
+                'first_name' => 'Ivan'
             ]));
         }
     // Тест проверяет, что команда действительно требует имя пользователя
@@ -117,6 +143,7 @@ class CreateUserCommandTest extends TestCase
                 'username' => 'Ivan',
                 'first_name' => 'Ivan',
                 'last_name' => 'Nikitin',
+                'password' => '123'
             ]));
     // Проверяем утверждение относительно мока,
     // а не утверждение относительно команды

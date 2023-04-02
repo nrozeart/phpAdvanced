@@ -8,6 +8,7 @@ class User
     private UUID $uuid;
     private Name $name;
     private string $username;
+    private string $password;
 
     /**
      * @param UUID $uuid
@@ -16,14 +17,20 @@ class User
      */
 
     //конструктор
-    public function __construct(UUID $uuid, Name $name, string $username)
+    public function __construct(UUID $uuid, Name $name, string $username, string $password)
     {
         $this->uuid = $uuid;
         $this->name = $name;
         $this->username = $username;
+        $this->password = $password;
     }
 
     //геттеры и сеттеры
+    public function password(): string
+    {
+        return $this->password;
+    }
+
     public function uuid(): UUID
     {
         return $this->uuid;

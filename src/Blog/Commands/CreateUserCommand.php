@@ -11,7 +11,7 @@ use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Person\Name;
 use Psr\Log\LoggerInterface;
 
-//php cli.php username=ivan first_name=Ivan last_name=Nikitin
+//php cli.php username=ivan first_name=Ivan last_name=Nikitin password=123
 
 final class CreateUserCommand
 {
@@ -35,17 +35,24 @@ final class CreateUserCommand
         $this->logger->info("Create user command started");
 
         $username = $arguments->get('username');
+        //Получаем пароль для нового пользователя
+        $password = $arguments->get('password');
+
         if ($this->userExists($username)) {
             // Логируем сообщение с уровнем WARNING
             $this->logger->warning("User already exists: $username");
-            // Вместо выбрасывания исключения просто выходим из функции
-            return;
+            // Бросаем исключение, если пользователь уже существует
+            throw new CommandException("User already exists: $username");
+//            // Вместо выбрасывания исключения просто выходим из функции
+//            return;
         }
         $uuid = UUID::random();
         $this->usersRepository->save(new User(
             $uuid,
             new Name($arguments->get('first_name'), $arguments->get('last_name')),
             $username,
+            // Добавили пароль
+            $password,
         ));
 
         // Логируем информацию о новом пользователе

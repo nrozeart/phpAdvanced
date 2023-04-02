@@ -8,13 +8,16 @@ use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Person\Name;
 use \PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 
 class SqliteUsersRepository implements UsersRepositoryInterface
 {
     private PDO $connection;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $connection) {
+    public function __construct(PDO $connection, LoggerInterface $logger) {
         $this->connection = $connection;
+        $this->logger = $logger;
     }
 
     public function save(User $user): void
@@ -25,12 +28,14 @@ class SqliteUsersRepository implements UsersRepositoryInterface
                    uuid,
                    first_name, 
                    last_name, 
-                   username) 
+                   username,
+                   password) 
             VALUES (
                     :uuid, 
                     :first_name, 
                     :last_name, 
-                    :username
+                    :username,
+                    :password
                     )
                     ON CONFLICT(uuid) DO UPDATE SET
                     first_name=:first_name,
@@ -42,8 +47,12 @@ class SqliteUsersRepository implements UsersRepositoryInterface
             ':uuid' => (string)$user->uuid(),
             ':first_name' => $user->name()->first(),
             ':last_name' => $user->name()->last(),
-            ':username' => $user->username()
+            ':username' => $user->username(),
+            // Значения для поля password
+            ':password' => $user->password(),
         ]);
+        // Логируем UUID нового пользователя
+        $this->logger->info("User created: {$user->uuid()}");
     }
 
     // Также добавим метод для получения
@@ -99,6 +108,7 @@ class SqliteUsersRepository implements UsersRepositoryInterface
             new UUID($result['uuid']),
             new Name($result['first_name'], $result['last_name']),
             $result['username'],
+            $result['password']
         );
     }
 }

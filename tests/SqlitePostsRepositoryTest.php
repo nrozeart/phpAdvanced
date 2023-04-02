@@ -13,6 +13,8 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use GeekBrains\Blog\UnitTests\DummyLogger;
 
 class SqlitePostsRepositoryTest extends TestCase
 {
@@ -27,7 +29,7 @@ class SqlitePostsRepositoryTest extends TestCase
         $statementStub->method('fetch')->willReturn(false);
         $connectionMock->method('prepare')->willReturn($statementStub);
 
-        $repository = new SqlitePostsRepository($connectionMock);
+        $repository = new SqlitePostsRepository($connectionMock, new DummyLogger());
         $this->expectExceptionMessage('Cannot find post: 123e4567-e89b-12d3-a456-426614174000');
         $this->expectException(PostNotFoundException::class);
         // Вызываем метод получения поста
@@ -58,7 +60,7 @@ class SqlitePostsRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementMock);
 
 
-        $repository = new SqlitePostsRepository($connectionStub);
+        $repository = new SqlitePostsRepository($connectionStub, new DummyLogger());
 
         $user = new User(
             new UUID('123e4567-e89b-12d3-a456-426614174000'),
@@ -99,7 +101,7 @@ class SqlitePostsRepositoryTest extends TestCase
             ]);
         $connectionStub->method('prepare')->willReturn($statementMock);
 
-        $postRepository = new SqlitePostsRepository($connectionStub);
+        $postRepository = new SqlitePostsRepository($connectionStub, new DummyLogger());
         $post = $postRepository->get(new UUID('9dba7ab0-93be-4ff4-9699-165320c97694'));
 
         $this->assertSame('9dba7ab0-93be-4ff4-9699-165320c97694', (string)$post->getUuid());

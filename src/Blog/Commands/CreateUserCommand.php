@@ -7,7 +7,6 @@ use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\User;
-use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Person\Name;
 use Psr\Log\LoggerInterface;
 
@@ -35,8 +34,6 @@ final class CreateUserCommand
         $this->logger->info("Create user command started");
 
         $username = $arguments->get('username');
-        //Получаем пароль для нового пользователя
-        $password = $arguments->get('password');
 
         if ($this->userExists($username)) {
             // Логируем сообщение с уровнем WARNING
@@ -46,17 +43,22 @@ final class CreateUserCommand
 //            // Вместо выбрасывания исключения просто выходим из функции
 //            return;
         }
-        $uuid = UUID::random();
-        $this->usersRepository->save(new User(
-            $uuid,
-            new Name($arguments->get('first_name'), $arguments->get('last_name')),
-            $username,
-            // Добавили пароль
-            $password,
-        ));
 
-        // Логируем информацию о новом пользователе
-        $this->logger->info("User created: $uuid");
+        // Создаём объект пользователя
+// Функция createFrom сама создаст UUID
+// и захеширует пароль
+        $user = User::createFrom(
+            $username,
+            $arguments->get('password'),
+            new Name(
+                $arguments->get('first_name'),
+                $arguments->get('last_name')
+            )
+        );
+        $this->usersRepository->save($user);
+        // Получаем UUID созданного пользователя
+        $this->logger->info('User created: ' . $user->uuid());
+
     }
     private function userExists(string $username): bool
     {

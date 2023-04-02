@@ -31,16 +31,16 @@ class PasswordAuthentication implements AuthenticationInterface
     // 2. Аутентифицируем пользователя
     // Проверяем, что предъявленный пароль
     // соответствует сохранённому в БД
-    try {
-        $password = $request->jsonBodyField('password');
-    } catch (HttpException $e) {
-        throw new AuthException($e->getMessage());
-    }
-    if ($password !== $user->password()) {
-    // Если пароли не совпадают — бросаем исключение
-        throw new AuthException('Wrong password');
-    }
-    // Пользователь аутентифицирован
-    return $user;
+        try {
+            $password = $request->jsonBodyField('password');
+        } catch (HttpException $e) {
+            throw new AuthException($e->getMessage());
+        }
+// Проверяем пароль методом пользователя
+        if (!$user->checkPassword($password)) {
+            throw new AuthException('Wrong password');
+        }
+return $user;
+
     }
 }

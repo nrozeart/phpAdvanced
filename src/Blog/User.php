@@ -1,34 +1,61 @@
 <?php
 namespace Geekbrains\PhpAdvanced\Blog;
 
+use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Person\Name;
 
 class User
 {
-    private UUID $uuid;
-    private Name $name;
-    private string $username;
-    private string $password;
-
     /**
      * @param UUID $uuid
      * @param Name $name
      * @param string $username
+     * @param string $hashedPassword
      */
-
-    //конструктор
-    public function __construct(UUID $uuid, Name $name, string $username, string $password)
+         //конструктор
+    public function __construct(
+        private UUID $uuid,
+        private Name $name,
+        private string $username,
+        private string $hashedPassword
+    )
     {
-        $this->uuid = $uuid;
-        $this->name = $name;
-        $this->username = $username;
-        $this->password = $password;
+
     }
 
     //геттеры и сеттеры
-    public function password(): string
+    // Переименовали функцию
+    public function hashedPassword(): string
     {
-        return $this->password;
+        return $this->hashedPassword;
+    }
+// Функция для вычисления хеша
+    private static function hash(string $password): string
+    {
+        return hash('sha256', $password);
+    }
+// Функция для проверки предъявленного пароля
+    public function checkPassword(string $password): bool
+    {
+        return $this->hashedPassword === self::hash($password);
+    }
+// Функция для создания нового пользователя
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public static function createFrom(
+        string $username,
+        string $password,
+        Name $name,
+    ): self
+    {
+        return new self(
+            UUID::random(),
+            $name,
+            $username,
+            self::hash($password)
+        );
     }
 
     public function uuid(): UUID

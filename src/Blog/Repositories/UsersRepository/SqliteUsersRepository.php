@@ -49,7 +49,7 @@ class SqliteUsersRepository implements UsersRepositoryInterface
             ':last_name' => $user->name()->last(),
             ':username' => $user->username(),
             // Значения для поля password
-            ':password' => $user->password(),
+            ':password' => $user->hashedPassword(),
         ]);
         // Логируем UUID нового пользователя
         $this->logger->info("User created: {$user->uuid()}");

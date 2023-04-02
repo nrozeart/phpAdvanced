@@ -13,6 +13,7 @@ use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Http\Actions\ActionInterface;
 use Geekbrains\PhpAdvanced\Http\Auth\AuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\Auth\IdentificationInterface;
+use Geekbrains\PhpAdvanced\Http\Auth\TokenAuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\Response;
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Http\ErrorResponse;
@@ -24,9 +25,8 @@ class CreatePost implements ActionInterface
 // Внедряем репозитории статей и пользователей
     public function __construct(
         private PostsRepositoryInterface $postsRepository,
-    // Вместо контракта репозитория пользователей
-    // внедряем контракт идентификации
-        private AuthenticationInterface $authentication,
+        // Аутентификация по токену
+        private TokenAuthenticationInterface $authentication,
         // Внедряем контракт логгера
         private LoggerInterface $logger,
     ) {

@@ -1,6 +1,8 @@
 <?php
 
 use Dotenv\Dotenv;
+use Geekbrains\PhpAdvanced\Blog\Repositories\AuthTokensRepository\AuthTokensRepositoryInterface;
+use Geekbrains\PhpAdvanced\Blog\Repositories\AuthTokensRepository\SqliteAuthTokensRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\LikesRepository\LikesRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\Repositories\LikesRepository\SqliteLikesRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
@@ -8,9 +10,12 @@ use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\SqlitePostsReposito
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use Geekbrains\PhpAdvanced\Http\Auth\AuthenticationInterface;
+use Geekbrains\PhpAdvanced\Http\Auth\BearerTokenAuthentication;
 use Geekbrains\PhpAdvanced\Http\Auth\IdentificationInterface;
 use Geekbrains\PhpAdvanced\Http\Auth\JsonBodyUsernameIdentification;
 use Geekbrains\PhpAdvanced\Http\Auth\PasswordAuthentication;
+use Geekbrains\PhpAdvanced\Http\Auth\PasswordAuthenticationInterface;
+use Geekbrains\PhpAdvanced\Http\Auth\TokenAuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\Container\DIContainer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -61,6 +66,20 @@ if ('yes' === $_ENV['LOG_TO_CONSOLE']) {
             new StreamHandler("php://stdout")
         );
 }
+
+$container->bind(
+    TokenAuthenticationInterface::class,
+    BearerTokenAuthentication::class
+);
+
+$container->bind(
+    PasswordAuthenticationInterface::class,
+    PasswordAuthentication::class
+);
+$container->bind(
+    AuthTokensRepositoryInterface::class,
+    SqliteAuthTokensRepository::class
+);
 
 $container->bind(
     AuthenticationInterface::class,

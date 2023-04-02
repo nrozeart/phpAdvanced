@@ -3,6 +3,7 @@
 use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use Geekbrains\PhpAdvanced\Http\Actions\Auth\LogIn;
 use Geekbrains\PhpAdvanced\Http\Actions\Likes\CreatePostLike;
 use Geekbrains\PhpAdvanced\Http\Actions\Posts\CreatePost;
 use Geekbrains\PhpAdvanced\Http\Actions\Posts\DeletePost;
@@ -48,6 +49,8 @@ $routes = [
             '/users/show' => FindByUsername::class,
         ],
         'POST' => [
+            // Добавили маршрут обмена пароля на токен
+            '/login' => LogIn::class,
             '/users/create' => CreateUser::class,
             '/posts/create' => CreatePost::class,
             '/post-likes/create' => CreatePostLike::class,

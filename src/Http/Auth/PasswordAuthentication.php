@@ -9,7 +9,7 @@ use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInte
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Blog\User;
 
-class PasswordAuthentication implements AuthenticationInterface
+class PasswordAuthentication implements PasswordAuthenticationInterface
 {
     public function __construct(
         private UsersRepositoryInterface $usersRepository

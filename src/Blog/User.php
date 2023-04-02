@@ -29,16 +29,7 @@ class User
     {
         return $this->hashedPassword;
     }
-// Функция для вычисления хеша
-    private static function hash(string $password): string
-    {
-        return hash('sha256', $password);
-    }
-// Функция для проверки предъявленного пароля
-    public function checkPassword(string $password): bool
-    {
-        return $this->hashedPassword === self::hash($password);
-    }
+
 // Функция для создания нового пользователя
 
     /**
@@ -47,15 +38,29 @@ class User
     public static function createFrom(
         string $username,
         string $password,
-        Name $name,
-    ): self
-    {
+        Name $name
+    ): self {
+// Генерируем UUID
+        $uuid = UUID::random();
         return new self(
-            UUID::random(),
+            $uuid,
             $name,
             $username,
-            self::hash($password)
+// Передаём сгенерированный UUID
+// в функцию хеширования пароля
+            self::hash($password, $uuid)
         );
+    }
+    private static function hash(string $password, UUID $uuid): string
+    {
+    // Используем UUID в качестве соли
+            return hash('sha256', $uuid . $password);
+        }
+        public function checkPassword(string $password): bool
+    {
+    // Передаём UUID пользователя
+    // в функцию хеширования пароля
+    return $this->hashedPassword=== self::hash($password, $this->uuid);
     }
 
     public function uuid(): UUID

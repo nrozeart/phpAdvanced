@@ -2,8 +2,10 @@
 
 namespace Geekbrains\PhpAdvanced\Blog\Commands\FakeData;
 
+use Geekbrains\PhpAdvanced\Blog\Comment;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Post;
+use Geekbrains\PhpAdvanced\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\User;
@@ -21,6 +23,7 @@ class PopulateDB extends Command
         private \Faker\Generator $faker,
         private UsersRepositoryInterface $usersRepository,
         private PostsRepositoryInterface $postsRepository,
+        private CommentsRepositoryInterface $commentsRepository,
     ) {
         parent::__construct();
     }
@@ -48,11 +51,19 @@ class PopulateDB extends Command
         }
 // От имени каждого пользователя
 // создаём по двадцать статей
+        $posts = [];
         foreach ($users as $user) {
             for ($i = 0; $i < 20; $i++) {
                 $post = $this->createFakePost($user);
+                $posts[] = $post;
                 $output->writeln('Post created: ' . $post->title());
 }
+        }
+        foreach ($posts as $post) {
+            for ($i = 0; $i < 2; $i++) {
+                $comment = $this->createFakeComment($post, $user);
+                $output->writeln('Comment created: ' . $comment->getText());
+            }
         }
         return Command::SUCCESS;
     }
@@ -94,6 +105,23 @@ class PopulateDB extends Command
         );
 // Сохраняем статью в репозиторий
         $this->postsRepository->save($post);
+        return $post;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function createFakeComment(Post $post, User $user): Post
+    {
+        $comment = new Comment(
+            UUID::random(),
+            $post,
+            $user,
+// Генерируем текст
+            $this->faker->realText
+        );
+// Сохраняем комментарий в репозиторий
+        $this->commentsRepository->save($comment);
         return $post;
     }
 }

@@ -7,6 +7,8 @@ use Faker\Provider\ru_RU\Internet;
 use Faker\Provider\ru_RU\Text;
 use Geekbrains\PhpAdvanced\Blog\Repositories\AuthTokensRepository\AuthTokensRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\Repositories\AuthTokensRepository\SqliteAuthTokensRepository;
+use Geekbrains\PhpAdvanced\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
+use Geekbrains\PhpAdvanced\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\LikesRepository\LikesRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\Repositories\LikesRepository\SqliteLikesRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
@@ -115,7 +117,13 @@ $container->bind(
     UsersRepositoryInterface::class,
     SqliteUsersRepository::class
 );
-// Возвращаем объект контейнера
+// 3. репозиторий пользователей
+$container->bind(
+    CommentsRepositoryInterface::class,
+    SqliteCommentsRepository::class
+);
+
+
 // Создаём объект генератора тестовых данных
 $faker = new \Faker\Generator();
 // Инициализируем необходимые нам виды данных
@@ -130,4 +138,7 @@ $container->bind(
     $faker
 );
 
+
+
+// Возвращаем объект контейнера
 return $container;

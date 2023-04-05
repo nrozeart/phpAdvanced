@@ -9,6 +9,7 @@ use Geekbrains\PhpAdvanced\Blog\Post;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use Geekbrains\PhpAdvanced\Blog\UUID;
 use PDO;
+use PDOException;
 use Psr\Log\LoggerInterface;
 
 class SqlitePostsRepository implements PostsRepositoryInterface
@@ -81,12 +82,15 @@ class SqlitePostsRepository implements PostsRepositoryInterface
 
     public function delete(UUID $uuid): void
     {
-        $statement = $this->connection->prepare(
-            'DELETE FROM posts WHERE posts.uuid=:uuid;'
-        );
-
-        $statement->execute([
-            ':uuid' => $uuid,
-        ]);
+        try {
+            $statement = $this->connection->prepare(
+                'DELETE FROM posts WHERE uuid = ?'
+            );
+            $statement->execute([(string)$uuid]);
+        } catch (PDOException $e) {
+            throw new PostsRepositoryException(
+                $e->getMessage(), (int)$e->getCode(), $e
+            );
+        }
     }
 }

@@ -9,4 +9,6 @@ interface PostsRepositoryInterface
 {
     public function save(Post $post): void;
     public function get(UUID $uuid): Post;
+// Добавили метод для удаления статьи
+    public function delete(UUID $uuid): void;
 }

@@ -11,6 +11,7 @@ use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInte
 use Geekbrains\PhpAdvanced\Blog\User;
 use Geekbrains\PhpAdvanced\Http\Actions\Posts\CreatePost;
 use Geekbrains\PhpAdvanced\Http\Auth\JsonBodyUuidIdentification;
+use Geekbrains\PhpAdvanced\Http\Auth\TokenAuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\ErrorResponse;
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Http\SuccessfulResponse;
@@ -98,7 +99,7 @@ class CreatePostActionTest extends TestCase
     {
         $request = new Request([], [], '{"author_uuid":"10373537-0805-4d7a-830e-22b481b4859c","title":"title","text":"text"}');
 
-        $authenticationStub = $this->createStub(JsonBodyUuidIdentification::class);
+        $authenticationStub = $this->createStub(TokenAuthenticationInterface::class);
         $authenticationStub
             ->method('user')
             ->willReturn(
@@ -106,6 +107,7 @@ class CreatePostActionTest extends TestCase
                     new UUID("10373537-0805-4d7a-830e-22b481b4859c"),
                     new Name('first', 'last'),
                     'username',
+                    '123'
                 )
             );
 
@@ -117,7 +119,7 @@ class CreatePostActionTest extends TestCase
 
         $this->assertInstanceOf(SuccessfulResponse::class, $response);
 
-        $this->setOutputCallback(function ($data){
+        $this->setOutputCallback(function ($data) {
             $dataDecode = json_decode(
                 $data,
                 associative: true,
@@ -147,7 +149,7 @@ class CreatePostActionTest extends TestCase
         $request = new Request([], [], '{"author_uuid":"10373537-0805-4d7a-830e-22b481b4859c","title":"title","text":"text"}');
 
         $postsRepositoryStub = $this->createStub(PostsRepositoryInterface::class);
-        $authenticationStub = $this->createStub(JsonBodyUuidIdentification::class);
+        $authenticationStub = $this->createStub(TokenAuthenticationInterface::class);
 
         $authenticationStub
             ->method('user')
@@ -176,7 +178,7 @@ class CreatePostActionTest extends TestCase
         $request = new Request([], [], '{"author_uuid":"10373537-0805-4d7a-830e-22b481b4859c","title":"title"}');
 
         $postsRepository = $this->postsRepository([]);
-        $authenticationStub = $this->createStub(JsonBodyUuidIdentification::class);
+        $authenticationStub = $this->createStub(TokenAuthenticationInterface::class);
         $authenticationStub
             ->method('user')
             ->willReturn(
@@ -184,6 +186,7 @@ class CreatePostActionTest extends TestCase
                     new UUID("10373537-0805-4d7a-830e-22b481b4859c"),
                     new Name('first', 'last'),
                     'username',
+                    '123'
                 )
             );
 

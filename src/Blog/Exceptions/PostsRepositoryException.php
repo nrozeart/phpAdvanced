@@ -2,7 +2,7 @@
 
 namespace Geekbrains\PhpAdvanced\Blog\Exceptions;
 
-class UserNotFoundException extends AppException
+class PostsRepositoryException extends AppException
 {
 
 }

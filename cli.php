@@ -1,50 +1,30 @@
 <?php
 
-use Geekbrains\PhpAdvanced\Blog\Commands\Arguments;
-use Geekbrains\PhpAdvanced\Blog\Commands\CreateUserCommand;
-use Geekbrains\PhpAdvanced\Blog\Exceptions\AppException;
-use Psr\Log\LoggerInterface;
+
+use Geekbrains\PhpAdvanced\Blog\Commands\Users\CreateUser;
+use Geekbrains\PhpAdvanced\Blog\Commands\Users\UpdateUser;
+use Geekbrains\PhpAdvanced\Http\Actions\Posts\DeletePost;
+use Symfony\Component\Console\Application;
 
 
 // Подключаем файл bootstrap.php
-// и получаем настроенный контейнер
 $container = require __DIR__ . '/bootstrap.php';
-// При помощи контейнера создаём команду
-$command = $container->get(CreateUserCommand::class);
-
-// Получаем объект логгера из контейнера
-$logger = $container->get(LoggerInterface::class);
-
-try {
-    $command->handle(Arguments::fromArgv($argv));
-} catch (Exception $e) {
-    // Логируем информацию об исключении.
-// Объект исключения передаётся логгеру
-// с ключом "exception".
-// Уровень логирования – ERROR
-    $logger->error($e->getMessage(), ['exception' => $e]);
-    echo "{$e->getMessage()}\n";
+// Создаём объект приложения
+$application = new Application();
+// Перечисляем классы команд
+$commandsClasses = [
+    CreateUser::class,
+    // Добавили команду удаления статей
+    DeletePost::class,
+    // Добавили команду обновления пользователя
+    UpdateUser::class,
+];
+foreach ($commandsClasses as $commandClass) {
+// Посредством контейнера
+// создаём объект команды
+    $command = $container->get($commandClass);
+// Добавляем команду к приложению
+    $application->add($command);
 }
-
-
-
-
-
-
-//include __DIR__ . "/vendor/autoload.php";
-//
-////Создаём объект подключения к SQLite
-//$connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
-//
-////Создаём объект репозитория
-//$usersRepository = new SqliteUsersRepository($connection);
-////Добавляем в репозиторий несколько пользователей
-////$usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), "admin"));
-////$usersRepository->save(new User(UUID::random(), new Name('Anna', 'Petrova'), "user"));
-//
-//try {
-//    //$usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), "admin"));
-//    echo $usersRepository->getByUsername("admin");
-//} catch (Exception $e) {
-//    echo $e->getMessage();
-//}
+// Запускаем приложение
+$application->run();

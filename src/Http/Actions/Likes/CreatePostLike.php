@@ -2,6 +2,7 @@
 
 namespace Geekbrains\PhpAdvanced\Http\Actions\Likes;
 
+use Geekbrains\PhpAdvanced\Blog\Exceptions\AuthException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\HttpException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\LikeAlreadyExists;
@@ -13,6 +14,7 @@ use Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository\PostsRepositoryInte
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\UUID;
 use Geekbrains\PhpAdvanced\Http\Actions\ActionInterface;
+use Geekbrains\PhpAdvanced\Http\Auth\TokenAuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Http\Response;
 use Geekbrains\PhpAdvanced\Http\ErrorResponse;
@@ -24,7 +26,7 @@ class CreatePostLike implements ActionInterface
     public   function __construct(
         private LikesRepositoryInterface $likesRepository,
         private PostsRepositoryInterface $postRepository,
-        private UsersRepositoryInterface $usersRepository,
+        private TokenAuthenticationInterface $authentication,
     )
     {
     }
@@ -36,17 +38,15 @@ class CreatePostLike implements ActionInterface
     public function handle(Request $request): Response
     {
         try {
-            $postUuid = $request->JsonBodyField('post_uuid');
-            $userUuid = $request->JsonBodyField('user_uuid');
-        } catch (HttpException $e) {
-            return new ErrorResponse($e->getMessage());
+            $author = $this->authentication->user($request);
+        } catch (AuthException $exception) {
+            return new ErrorResponse($exception->getMessage());
         }
 
-        //TODO тоже и для юзера
         try {
-            $this->usersRepository->get(new UUID($userUuid));
-        } catch (UserNotFoundException $exception) {
-            return new ErrorResponse($exception->getMessage());
+            $postUuid = $request->JsonBodyField('post_uuid');
+        } catch (HttpException $e) {
+            return new ErrorResponse($e->getMessage());
         }
 
         try {

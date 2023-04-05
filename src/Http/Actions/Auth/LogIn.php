@@ -11,6 +11,7 @@ use Geekbrains\PhpAdvanced\Http\Auth\PasswordAuthenticationInterface;
 use Geekbrains\PhpAdvanced\Http\Request;
 use Geekbrains\PhpAdvanced\Http\ErrorResponse;
 use Geekbrains\PhpAdvanced\Http\SuccessfulResponse;
+use Geekbrains\PhpAdvanced\Http\Response;
 
 class LogIn implements ActionInterface
 {
@@ -21,7 +22,7 @@ class LogIn implements ActionInterface
         private AuthTokensRepositoryInterface $authTokensRepository
     ) {
     }
-    public function handle(Request $request): SuccessfulResponse
+    public function handle(Request $request): Response
     {
 // Аутентифицируем пользователя
         try {
@@ -29,19 +30,19 @@ class LogIn implements ActionInterface
         } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }
-// Генерируем токен
-        $authToken = new AuthToken(
-// Случайная строка длиной 40 символов
-bin2hex(random_bytes(40)),
-$user->uuid(),
-// Срок годности - 1 день
-(new DateTimeImmutable())->modify('+1 day')
-);
-// Сохраняем токен в репозиторий
-$this->authTokensRepository->save($authToken);
-// Возвращаем токен
-return new SuccessfulResponse([
-    'token' => (string)$authToken->token(),
-]);
+        // Генерируем токен
+                $authToken = new AuthToken(
+        // Случайная строка длиной 40 символов
+        bin2hex(random_bytes(40)),
+        $user->uuid(),
+        // Срок годности - 1 день
+        (new DateTimeImmutable())->modify('+1 day')
+        );
+        // Сохраняем токен в репозиторий
+        $this->authTokensRepository->save($authToken);
+        // Возвращаем токен
+        return new SuccessfulResponse([
+            'token' => (string)$authToken->token(),
+        ]);
 }
 }

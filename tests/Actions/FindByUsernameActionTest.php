@@ -75,7 +75,8 @@ $usersRepository = $this->usersRepository([
 new User(
 UUID::random(),
 new Name('Ivan', 'Nikitin'),
-    'ivan'
+    'ivan',
+    '123'
 ),
 ]);
 $action = new FindByUsername($usersRepository);

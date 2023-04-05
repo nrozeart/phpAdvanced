@@ -32,8 +32,30 @@ class PopulateDB extends Command
     {
         $this
             ->setName('fake-data:populate-db')
-            ->setDescription('Populates DB with fake data');
+            ->setDescription('Populates DB with fake data')
+//            ->addOption(
+//        // Имя опции
+//            'users-number',
+//            // Сокращённое имя
+//            'un',
+//            // Опция имеет значения
+//            InputOption::VALUE_REQUIRED,
+//            // Описание
+//            'Numbers of users are created',
+//        )
+//            ->addOption(
+//        // Имя опции
+//            'posts-number',
+//            // Сокращённое имя
+//            'pn',
+//            // Опция имеет значения
+//            InputOption::VALUE_REQUIRED,
+//            // Описание
+//            'Numbers of posts are created',
+//        )
+;
     }
+
 
     /**
      * @throws InvalidArgumentException
@@ -42,23 +64,29 @@ class PopulateDB extends Command
         InputInterface $input,
         OutputInterface $output,
     ): int {
-// Создаём десять пользователей
+        // Получаем значения опций
+//        $usersNumber = $input->getOption('users-number');
+//        $postsNumber = $input->getOption('posts-number');
+
+// Создаём users-number пользователей
         $users = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $user = $this->createFakeUser();
             $users[] = $user;
             $output->writeln('User created: ' . $user->username());
         }
 // От имени каждого пользователя
-// создаём по двадцать статей
+// создаём по posts-number статей
         $posts = [];
         foreach ($users as $user) {
-            for ($i = 0; $i < 20; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 $post = $this->createFakePost($user);
                 $posts[] = $post;
                 $output->writeln('Post created: ' . $post->title());
 }
         }
+// К каждому посту создаем
+//  по 2 комментария
         foreach ($posts as $post) {
             for ($i = 0; $i < 2; $i++) {
                 $comment = $this->createFakeComment($post, $user);

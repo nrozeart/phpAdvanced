@@ -1,6 +1,6 @@
 <?php
 
-namespace Geekbrains\PhpAdvanced\Blog\UnitTests;
+namespace GeekBrains\Blog\UnitTests;
 
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\PostNotFoundException;
@@ -66,6 +66,7 @@ class SqlitePostsRepositoryTest extends TestCase
             new UUID('123e4567-e89b-12d3-a456-426614174000'),
             new Name('first_name', 'last_name'),
             'name',
+            '123'
         );
 
         $repository->save(

@@ -108,7 +108,7 @@ class SqliteUsersRepository implements UsersRepositoryInterface
             new UUID($result['uuid']),
             new Name($result['first_name'], $result['last_name']),
             $result['username'],
-            $result['password']
+            (string)$result['password']
         );
     }
 }

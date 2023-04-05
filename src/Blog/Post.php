@@ -48,7 +48,7 @@ class Post
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function title(): string
     {
         return $this->title;
     }

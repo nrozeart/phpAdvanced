@@ -1,6 +1,7 @@
 <?php
 
 
+use Geekbrains\PhpAdvanced\Blog\Commands\FakeData\PopulateDB;
 use Geekbrains\PhpAdvanced\Blog\Commands\Users\CreateUser;
 use Geekbrains\PhpAdvanced\Blog\Commands\Users\UpdateUser;
 use Geekbrains\PhpAdvanced\Http\Actions\Posts\DeletePost;
@@ -18,6 +19,8 @@ $commandsClasses = [
     DeletePost::class,
     // Добавили команду обновления пользователя
     UpdateUser::class,
+    // Добавили команду генерирования тестовых данных
+    PopulateDB::class,
 ];
 foreach ($commandsClasses as $commandClass) {
 // Посредством контейнера

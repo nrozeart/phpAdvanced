@@ -4,6 +4,7 @@ namespace Geekbrains\PhpAdvanced\Blog\Repositories\PostsRepository;
 
 use Geekbrains\PhpAdvanced\Blog\Exceptions\InvalidArgumentException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\PostNotFoundException;
+use Geekbrains\PhpAdvanced\Blog\Exceptions\PostsRepositoryException;
 use Geekbrains\PhpAdvanced\Blog\Exceptions\UserNotFoundException;
 use Geekbrains\PhpAdvanced\Blog\Post;
 use Geekbrains\PhpAdvanced\Blog\Repositories\UsersRepository\SqliteUsersRepository;
@@ -33,7 +34,7 @@ class SqlitePostsRepository implements PostsRepositoryInterface
         $statement->execute([
             ':uuid' => $post->getUuid(),
             ':author_uuid' => $post->getUser()->uuid(),
-            ':title' => $post->getTitle(),
+            ':title' => $post->title(),
             ':text' => $post->getText()
         ]);
         // Логируем UUID новой статьи

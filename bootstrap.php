@@ -1,6 +1,10 @@
 <?php
 
 use Dotenv\Dotenv;
+use Faker\Provider\Lorem;
+use Faker\Provider\ro_RO\Person;
+use Faker\Provider\ru_RU\Internet;
+use Faker\Provider\ru_RU\Text;
 use Geekbrains\PhpAdvanced\Blog\Repositories\AuthTokensRepository\AuthTokensRepositoryInterface;
 use Geekbrains\PhpAdvanced\Blog\Repositories\AuthTokensRepository\SqliteAuthTokensRepository;
 use Geekbrains\PhpAdvanced\Blog\Repositories\LikesRepository\LikesRepositoryInterface;
@@ -112,4 +116,18 @@ $container->bind(
     SqliteUsersRepository::class
 );
 // Возвращаем объект контейнера
+// Создаём объект генератора тестовых данных
+$faker = new \Faker\Generator();
+// Инициализируем необходимые нам виды данных
+$faker->addProvider(new Person($faker));
+$faker->addProvider(new Text($faker));
+$faker->addProvider(new Internet($faker));
+$faker->addProvider(new Lorem($faker));
+// Добавляем генератор тестовых данных
+// в контейнер внедрения зависимостей
+$container->bind(
+    \Faker\Generator::class,
+    $faker
+);
+
 return $container;

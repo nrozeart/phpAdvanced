@@ -1,34 +1,33 @@
 <?php
 
-use Geekbrains\PhpAdvanced\Blog\Post;
-use Geekbrains\PhpAdvanced\Blog\User;
-use Geekbrains\PhpAdvanced\Person\{Person};
-use Geekbrains\PhpAdvanced\Person\Name;
 
-//сокр. для use src\Blog\User as User;
-// сокр. для use Person\Name as Name; и use Person\Person as Person;
+use Geekbrains\PhpAdvanced\Blog\Commands\FakeData\PopulateDB;
+use Geekbrains\PhpAdvanced\Blog\Commands\Users\CreateUser;
+use Geekbrains\PhpAdvanced\Blog\Commands\Users\UpdateUser;
+use Geekbrains\PhpAdvanced\Http\Actions\Posts\DeletePost;
+use Symfony\Component\Console\Application;
 
-include __DIR__ . "/vendor/autoload.php";
 
-//spl_autoload_register('load');
-function load ($classname) {
-    $file = $classname . ".php";
-    $file = str_replace('\\', '/', $file);
-//    $file = str_replace('Geekbrains', 'src', $file);
-
-    if(file_exists($file)) {
-        include $file;
-    }
+// Подключаем файл bootstrap.php
+$container = require __DIR__ . '/bootstrap.php';
+// Создаём объект приложения
+$application = new Application();
+// Перечисляем классы команд
+$commandsClasses = [
+    CreateUser::class,
+    // Добавили команду удаления статей
+    DeletePost::class,
+    // Добавили команду обновления пользователя
+    UpdateUser::class,
+    // Добавили команду генерирования тестовых данных
+    PopulateDB::class,
+];
+foreach ($commandsClasses as $commandClass) {
+// Посредством контейнера
+// создаём объект команды
+    $command = $container->get($commandClass);
+// Добавляем команду к приложению
+    $application->add($command);
 }
-
-$name = new Name('Peter', 'Sidorov');
-$user = new User(1, $name, "Admin");
-echo $user;
-
-$person = new Person($name, new DateTimeImmutable());
-
-$post = new Post(
-    1,
-    $person,
-    'Мой новый пост');
-echo $post;
+// Запускаем приложение
+$application->run();
